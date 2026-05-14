@@ -23,7 +23,7 @@ const Dashboard = () => {
 
   const user = useSelector((state) => state.auth.user);
 
-  const { handleCreateChat,handleLogout } = useChat();
+  const { handleCreateChat } = useChat();
 
   useEffect(() => {
     chat.initSocket();
