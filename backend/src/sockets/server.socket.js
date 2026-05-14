@@ -7,7 +7,7 @@ export function initSocket(httpServer){
 
     io = new Server(httpServer,{
         cors:{
-            origin : 'https://perplexity-project-navy.vercel.app/',
+            origin : 'https://perplexity-project-navy.vercel.app',
             credentials : true
         }
     })
