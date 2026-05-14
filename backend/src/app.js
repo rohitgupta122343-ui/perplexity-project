@@ -13,9 +13,10 @@ app.use(express.json())
 app.use(cookieParser())
 app.use(morgan("dev"))
 app.use(cors({
-    origin : ['https://perplexity-project-navy.vercel.app'],
+    origin : 'https://perplexity-project-navy.vercel.app',
     credentials : true
 }))
+
 
 app.use('/api/auth',authRouter)
 app.use('/api/chats',chatRouter)
