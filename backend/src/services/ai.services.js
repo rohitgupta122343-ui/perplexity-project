@@ -15,7 +15,6 @@ const mistralModel = new ChatMistralAI({
     apiKey : process.env.MISTRAL_API_KEY
 })
 
-
 const searchInternetTool = tool(
     searchInternet,{
         name : "searchInternet",
@@ -62,28 +61,28 @@ Do NOT use slang or casual broken sentences.
 Do NOT generate random phrases.`
 })
 
-export async function genrateRespones(messages){
+export async function genrateRespones(messages, type) {
+
+
 
     const respones = await agent.invoke({
-        messages : [
-             new SystemMessage(`
-                You are a helpful and precise assistant for answering questions.
-                If you don't know the answer, say you don't know. 
-                If the question requires up-to-date information, use the "searchInternet" tool to get the latest information from the internet and then answer based on the search results.
-      
-                `),
-           ... (messages.map((msg)=>{
-        if(msg.role==="user"){
-          return  new HumanMessage(msg.content)
-        }
-        else if(msg.role==="ai"){
-          return  new AIMessage(msg.content)
-        }
-    }))]
+        messages: [
+            new SystemMessage(`
+                You are a helpful assistant.
+                Use searchInternet tool for latest info if needed.
+            `),
 
-})
+            ...messages.map((msg) => {
+                if (msg.role === "user") return new HumanMessage(msg.content);
+                if (msg.role === "ai") return new AIMessage(msg.content);
+                return null;
+            }).filter(Boolean)
+        ]
+    });
 
-    return respones.messages[respones.messages.length-1].text
+    const last = respones.messages.at(-1);
+
+    return last?.content || last?.text;
 }
 
 export async function genrateTitle(message){
