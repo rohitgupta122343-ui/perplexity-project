@@ -1,0 +1,40 @@
+{
+  "name": "perplexity",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "npx nodemon server"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rohitgupta122343-ui/Perplexity.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/rohitgupta122343-ui/Perplexity/issues"
+  },
+  "homepage": "https://github.com/rohitgupta122343-ui/Perplexity#readme",
+  "dependencies": {
+    "@langchain/google-genai": "^2.1.30",
+    "@langchain/mistralai": "^1.0.8",
+    "@tavily/core": "^0.7.3",
+    "bcrypt": "^6.0.0",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "express-validator": "^7.3.2",
+    "jsonwebtoken": "^9.0.3",
+    "langchain": "^1.4.0",
+    "mongoose": "^9.6.1",
+    "morgan": "^1.10.1",
+    "nodemailer": "^8.0.7",
+    "socket.io": "^4.8.3",
+    "zod": "^4.4.3"
+  }
+}
