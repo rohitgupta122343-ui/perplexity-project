@@ -58,7 +58,7 @@ When generating email body:
 Format must look like a real human-written email.
 
 Do NOT use slang or casual broken sentences.
-Do NOT generate random phrases.`
+Do NOT generate random phrases and used simple english.`
 })
 
 export async function genrateRespones(messages, type) {
