@@ -33,7 +33,7 @@ export async function registerContoller(req,res){
         <p>Hi ${username},</p>
     <p>Thank you for registering at <strong>Perplexity</strong>.</p>
     <p>Click below Link and Verify Email </p>
-   <a href='http://localhost:3000/api/auth/verify-email?token=${emailVerficationToken}'>
+   <a href='https://perplexity-project-vay7.onrender.com/api/auth/verify-email?token=${emailVerficationToken}'>
   Click Here
 </a>
     <p>Best regards,<br>The Perplexity Team</p>
@@ -125,7 +125,7 @@ export async function verifyEmail(req,res){
     await user.save()
 
     const html = `<h1> your email verified </h1>
-                    <a href='http://localhost:5173/login'>Go to Login Page</a>`
+                    <a href='https://perplexity-project-navy.vercel.app/login'>Go to Login Page</a>`
 
     res.send(html)
    
