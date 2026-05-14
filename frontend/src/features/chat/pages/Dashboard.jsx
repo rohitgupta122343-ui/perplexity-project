@@ -23,7 +23,7 @@ const Dashboard = () => {
 
   const user = useSelector((state) => state.auth.user);
 
-  const { handleCreateChat } = useChat();
+  const { handleCreateChat,handleLogout } = useChat();
 
   useEffect(() => {
     chat.initSocket();
@@ -228,7 +228,7 @@ const Dashboard = () => {
                   <p>
                     <i class="ri-question-line"></i> Help
                   </p>
-                  <p className="cursor-pointer" onClick={() => logout()}>
+                  <p className="cursor-pointer" onClick={() => handleLogout()}>
                     <i class="ri-logout-box-r-line"></i> Logout
                   </p>
                 </div>

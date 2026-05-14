@@ -13,7 +13,7 @@ app.use(express.json())
 app.use(cookieParser())
 app.use(morgan("dev"))
 app.use(cors({
-    origin : ['http://localhost:5173', 'https://perplexity-project-navy.vercel.app'],
+    origin : ['https://perplexity-project-navy.vercel.app'],
     credentials : true
 }))
 
