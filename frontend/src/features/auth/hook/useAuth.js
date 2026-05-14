@@ -7,7 +7,7 @@ import { login,register,getMe,logout } from '../services/api.services'
 export  function useAuth(){
 
     const dispatch = useDispatch()
-    const navigate = useNavigate()
+
 
     async function handleRegister({username,email,password}) {
         
