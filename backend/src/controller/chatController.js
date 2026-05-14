@@ -7,6 +7,7 @@ export async function sendMessage(req,res) {
     
     const {message, chat:chatId} = req.body;
 
+    console.log(req.body)
 
     let title = null 
     let chat = null
@@ -39,7 +40,6 @@ export async function sendMessage(req,res) {
 
 
     res.json({
-       
         chat,
         title,
         userMessage,

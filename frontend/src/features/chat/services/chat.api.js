@@ -8,7 +8,9 @@ const api = axios.create({
 
 export async function sendMessage({message,chatId}) {
     
-    const res = await api.post('/api/chats/message',{ message,chat: chatId})
+    const res = await api.post('/api/chats/message',{ message,chat: chatId},{
+        withCredentials : true
+    })
     return res.data
 }
 

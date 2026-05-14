@@ -6,6 +6,8 @@ export async function registerContoller(req,res){
 
     const {username,email,password} = req.body;
 
+    
+
    const userExtist = await userModel.findOne({
         $or:[
             {username},
