@@ -3,11 +3,12 @@ import {useDispatch} from 'react-redux'
 import { seterror,setuser,setloading } from '../auth.slice'
 
 import { login,register,getMe,logout } from '../services/api.services'
-
+import { useNavigate } from 'react-router-dom'
 
 export  function useAuth(){
 
     const dispatch = useDispatch()
+    const navigate = useNavigate()
 
     async function handleRegister({username,email,password}) {
         
@@ -62,6 +63,7 @@ export  function useAuth(){
         try {
             dispatch(setloading(true))
             await logout()
+             navigate("/login")   
             dispatch(setuser(null))
         } catch (error) {
             dispatch(seterror(error))
