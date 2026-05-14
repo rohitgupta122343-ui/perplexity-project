@@ -64,7 +64,7 @@ export  function useAuth(){
             dispatch(setloading(true))
             await logout()
             dispatch(setuser(null))
-            navigate("/login")   
+             navigate("/login", { replace: true })
         } catch (error) {
             dispatch(seterror(error))
         } finally {
