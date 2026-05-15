@@ -17,25 +17,7 @@ authRouter.get('/get-me',authUser,getMe)
 
 authRouter.get('/verify-email',verifyEmail)
 
-app.get("/test-mail", async (req, res) => {
 
-  try {
-
-    await sendEmail({
-      to: "yourmobilegmail@gmail.com",
-      subject: "Mobile Test",
-      html: "<h1>Email working on mobile 🚀</h1>"
-    })
-
-    res.send("EMAIL SENT")
-
-  } catch (err) {
-
-    console.log(err)
-
-    res.send("FAILED")
-  }
-})
 
 
 
