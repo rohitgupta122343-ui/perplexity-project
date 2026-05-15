@@ -8,16 +8,29 @@ export async function registerContoller(req,res){
 
         const {username,email,password} = req.body;
 
-        const userExtist = await userModel.findOne({
-            $or:[{email}]
-        })
+       const userExtist = await userModel.findOne({
+   $or:[
+      { email },
+      { username }
+   ]
+})
 
         if(userExtist){
-            return res.status(400).json({
-                message : 'user already exist with same email',
-                success : false
-            })
-        }
+
+   if(userExtist.email === email){
+      return res.status(400).json({
+         success:false,
+         message:'email already exists'
+      })
+   }
+
+   if(userExtist.username === username){
+      return res.status(400).json({
+         success:false,
+         message:'username already exists'
+      })
+   }
+}
 
         const user = await userModel.create({
             username,
