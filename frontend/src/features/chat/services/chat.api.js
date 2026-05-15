@@ -15,7 +15,6 @@ export async function sendMessage({message,chatId}) {
 export async function getChats(){
 
     const res = await api.get('/api/chats')
-    console.log(res.data);
     return res.data
 }
 
