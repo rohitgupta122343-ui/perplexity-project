@@ -9,37 +9,66 @@ export const useChat = () => {
   const dispatch = useDispatch()
 
   async function handleSendMessage({ message, chatId }) {
-    
 
-      dispatch(setIsLoading(true))
+  try {
 
-      const data = await sendMessage({ message, chatId })
-      const { chat, aiMessage } = data
+    dispatch(setIsLoading(true))
 
+    let currentChatId = chatId
 
-      if(!chatId){
+    // CREATE CHAT ONLY ONCE
+    if (!currentChatId) {
 
-        dispatch(createNewChat({
-          chatId : chat._id,
-          title : chat.title
-        }))
-      }
+      const newChatData = await createChat({
+        title: message
+      })
 
-      dispatch(addNewMessage({
-        chatId: chatId || chat._id,
-        content: message,
-        role: "user"
-      }))
+      const { chat } = newChatData
 
-      dispatch(addNewMessage({
-        chatId: chatId || chat._id,
-        content: aiMessage.content,
-        role: aiMessage.role
+      currentChatId = chat._id
+
+      dispatch(createNewChat({
+        chatId: chat._id,
+        title: chat.title
       }))
 
       dispatch(setCurrentChatId(chat._id))
-
     }
+
+    // USER MESSAGE
+    dispatch(addNewMessage({
+      chatId: currentChatId,
+      content: message,
+      role: "user"
+    }))
+
+    // SEND TO BACKEND
+    const data = await sendMessage({
+      message,
+      chatId: currentChatId
+    })
+
+    const { aiMessage } = data
+
+    // AI MESSAGE
+    dispatch(addNewMessage({
+      chatId: currentChatId,
+      content: aiMessage.content,
+      role: aiMessage.role
+    }))
+
+  } catch (err) {
+
+    console.log(err)
+
+    dispatch(setError(err.message))
+
+  } finally {
+
+    dispatch(setIsLoading(false))
+
+  }
+}
 
   async function handleGetChats() { 
     dispatch(setIsLoading(true))
