@@ -76,6 +76,9 @@
 // }
 
 
+import dotenv from 'dotenv'
+dotenv.config()
+
 import { Resend } from 'resend'
 
 const resend = new Resend(process.env.RESEND_API_KEY)
@@ -86,7 +89,7 @@ export async function sendEmail({ to, subject, html }) {
 
     const data = await resend.emails.send({
 
-      from: 'perplexity <no-reply@perplexity-project-vay7.onrender.com>',
+      from: 'onboarding@resend.dev',
 
       to,
 
@@ -95,12 +98,12 @@ export async function sendEmail({ to, subject, html }) {
       html
     })
 
-    console.log(" EMAIL SENT:", data)
+    console.log("✅ EMAIL SENT:", data)
 
     return data
 
   } catch (err) {
 
-    console.log(" EMAIL ERROR:", err)
+    console.log("❌ EMAIL ERROR:", err)
   }
 }
