@@ -86,7 +86,7 @@ export async function sendEmail({ to, subject, html }) {
 
     const data = await resend.emails.send({
 
-      from: 'perplexity <https://perplexity-project-vay7.onrender.com>',
+      from: 'perplexity <no-reply@perplexity-project-vay7.onrender.com>',
 
       to,
 
