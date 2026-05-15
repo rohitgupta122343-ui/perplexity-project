@@ -64,11 +64,11 @@ export  function useAuth(){
             dispatch(setloading(true))
             await logout()
             dispatch(setuser(null))
-             Navigate('/login')
         } catch (error) {
             dispatch(seterror(error))
         } finally {
             dispatch(setloading(false))
+
         }
     }
 

@@ -28,6 +28,7 @@ const Dashboard = () => {
   useEffect(() => {
     chat.initSocket();
     chat.handleGetChats();
+    
   }, []);
 
   const handleSubmitMessage = (event) => {
