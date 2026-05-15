@@ -34,6 +34,7 @@ export async function sendEmail({ to, subject, html }) {
 
     console.log("EMAIL SENT ✅", res.messageId);
     return res;
+
   } catch (err) {
     console.log("❌ EMAIL ERROR FULL:", err);
   }

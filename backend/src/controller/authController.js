@@ -2,79 +2,60 @@ import userModel from "../models/userModel.js";
 import { sendEmail } from "../services/mail.services.js";
 import jwt from 'jsonwebtoken'
 
-export async function registerContoller(req,res){
+export async function registerContoller(req, res) {
+  try {
+    const { username, email, password } = req.body;
 
-    try {
+    const userExtist = await userModel.findOne({
+      $or: [{ email }, { username }],
+    });
 
-        const {username,email,password} = req.body;
-
-       const userExtist = await userModel.findOne({
-   $or:[
-      { email },
-      { username }
-   ]
-})
-
-        if(userExtist){
-
-   if(userExtist.email === email){
+    if (userExtist) {
       return res.status(400).json({
-         success:false,
-         message:'email already exists'
-      })
-   }
-
-   if(userExtist.username === username){
-      return res.status(400).json({
-         success:false,
-         message:'username already exists'
-      })
-   }
-}
-
-        const user = await userModel.create({
-            username,
-            email,
-            password
-        })
-
-        res.status(201).json({
-            success:true,
-            message : 'user created successfully',
-            user:{
-                id:user._id,
-                username:user.username,
-                email:user.email
-            }
-        })
-
-        // background email
-        try {
-
-            const emailVerficationToken = jwt.sign(
-                {email:user.email},
-                process.env.JWT_SECRECT 
-            )
-
-            await sendEmail({
-  to: process.env.GOOGLE_USER,
-  subject: "Test Mail",
-  html: "<h1>Hello</h1>"
-});
-
-        } catch(err) {
-            console.log("EMAIL ERROR:", err)
-        }
-
-    } catch(err) {
-
-        console.log(err)
-
-        return res.status(500).json({
-            success:false,
-            message:err.message
-        })
+        success: false,
+        message:
+          userExtist.email === email
+            ? "email already exists"
+            : "username already exists",
+      });
     }
+
+    const user = await userModel.create({
+      username,
+      email,
+      password,
+    });
+
+    const token = jwt.sign(
+      { email: user.email },
+      process.env.JWT_SECRECT,
+      { expiresIn: "1h" }
+    );
+
+    const verifyLink = `${process.env.BASE_URL}/verify?token=${token}`;
+
+    await sendEmail({
+      to: user.email, // ✅ FIXED
+      subject: "Verify your email",
+      html: `<a href="${verifyLink}">Click to verify email</a>`,
+    });
+
+    return res.status(201).json({
+      success: true,
+      message: "user created successfully. verification email sent",
+      user: {
+        id: user._id,
+        username: user.username,
+        email: user.email,
+      },
+    });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({
+      success: false,
+      message: err.message,
+    });
+  }
 }
 
 export async function loginController(req,res){
