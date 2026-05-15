@@ -17,7 +17,9 @@ app.use(cors({
     credentials : true
 }))
 
-
+app.get("/", (req, res) => {
+  res.send("API is running 🚀");
+});
 app.use('/api/auth',authRouter)
 app.use('/api/chats',chatRouter)
 
