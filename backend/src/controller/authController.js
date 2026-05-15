@@ -53,7 +53,7 @@ export async function registerContoller(req,res){
 
             const emailVerficationToken = jwt.sign(
                 {email:user.email},
-                process.env.JWT_SECRECT
+                process.env.JWT_SECRECT 
             )
 
             await sendEmail({
@@ -133,31 +133,41 @@ export async function loginController(req,res){
 
 }
 
-export async function verifyEmail(req,res){
+export async function verifyEmail(req, res) {
+  try {
+    const { token } = req.query;
 
+    if (!token) {
+      return res.status(400).json({ message: "Token missing" });
+    }
 
-    const {token} = req.query
+    const decoded = jwt.verify(token, process.env.JWT_SECRECT);
 
-    const decoded = jwt.verify(token,process.env.JWT_SECRECT)
+    const user = await userModel.findOne({ email: decoded.email });
 
-
-    const user = await userModel.findOne({email : decoded.email})
-
-    if(!user){
-        return res.status(400).json({
-            message : 'user not found'
-        })
+    if (!user) {
+      return res.status(400).json({ message: "User not found" });
     }
 
     user.verified = true;
+    await user.save();
 
-    await user.save()
+    const html = `
+      <h1>Email verified ✅</h1>
+      <a href="https://perplexity-project-navy.vercel.app/login">
+        Go to Login Page
+      </a>
+    `;
 
-    const html = `<h1> your email verified </h1>
-                    <a href='https://perplexity-project-navy.vercel.app/login'>Go to Login Page</a>`
+    return res.send(html);
 
-    res.send(html)
-   
+  } catch (err) {
+    console.log("VERIFY EMAIL ERROR:", err.message);
+
+    return res.status(400).json({
+      message: "Invalid or expired token"
+    });
+  }
 }
 
 export async function getMe(req,res){
