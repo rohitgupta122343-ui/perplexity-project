@@ -1,36 +1,34 @@
-import dotenv from 'dotenv'
-dotenv.config()
+import dotenv from "dotenv";
+dotenv.config();
 
-import nodemailer from 'nodemailer'
+import nodemailer from "nodemailer";
 
 const transport = nodemailer.createTransport({
-    service:'gmail',
-    auth:{
-        user:process.env.GOOGLE_USER,
-        pass:process.env.GOOGLE_APP_PASSWORD
-    }
-})
+  service: "gmail",
+  auth: {
+    user: process.env.GOOGLE_USER,
+    pass: process.env.GOOGLE_APP_PASSWORD,
+  },
+});
 
+// test connection
+transport.verify()
+  .then(() => console.log("EMAIL READY ✅"))
+  .catch((err) => console.log("EMAIL ERROR ❌", err));
 
-
-
-transport.verify().then((res)=>{
-    console.log("Email transporter is ready to send emails",res);
-}).catch((err)=>{
-     console.error("Email transporter verification failed:",err);
-})
-
-
-
-export async function sendEmail({to,subject,html}){
-
+export async function sendEmail({ to, subject, html }) {
+  try {
     const res = await transport.sendMail({
-        from : process.env.GOOGLE_USER,
-        to,
-        subject,
-        html
-    })
-    
+      from: process.env.GOOGLE_USER,
+      to,
+      subject,
+      html,
+    });
 
-    
+    console.log("EMAIL SENT ✅", res.messageId);
+    return res;
+  } catch (err) {
+    console.log("EMAIL FAILED ❌", err);
+    throw err;
+  }
 }
