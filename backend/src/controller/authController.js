@@ -4,56 +4,70 @@ import jwt from 'jsonwebtoken'
 
 export async function registerContoller(req,res){
 
-    const {username,email,password} = req.body;
+    try {
 
-    
+        const {username,email,password} = req.body;
 
-   const userExtist = await userModel.findOne({
-        $or:[
-            {username},
-            {email}
-        ]
-    })
-
-
-    if(userExtist){
-        return res.status(400).json({
-            message : 'user already exist with same email',
-            success : false
+        const userExtist = await userModel.findOne({
+            $or:[{email}]
         })
-        
-    }
 
-   const user = await userModel.create({ username,email,password})
-
-   const emailVerficationToken = jwt.sign({email:user.email},process.env.JWT_SECRECT) 
-
-    await sendEmail({
-        to:email,
-        subject: 'Welcome to Perplexity!',
-        html : `
-        <p>Hi ${username},</p>
-    <p>Thank you for registering at <strong>Perplexity</strong>.</p>
-    <p>Click below Link and Verify Email </p>
-   <a href='https://perplexity-project-vay7.onrender.com/api/auth/verify-email?token=${emailVerficationToken}'>
-  Click Here
-</a>
-    <p>Best regards,<br>The Perplexity Team</p>
-        `
-    })
-
-
-
-    res.status(201).json({
-        message : 'user created successfully',
-        user:{
-            id:user._id,
-            username:user.username,
-            email:user.email
+        if(userExtist){
+            return res.status(400).json({
+                message : 'user already exist with same email',
+                success : false
+            })
         }
-    })
 
-   
+        const user = await userModel.create({
+            username,
+            email,
+            password
+        })
+
+        res.status(201).json({
+            success:true,
+            message : 'user created successfully',
+            user:{
+                id:user._id,
+                username:user.username,
+                email:user.email
+            }
+        })
+
+        // background email
+        try {
+
+            const emailVerficationToken = jwt.sign(
+                {email:user.email},
+                process.env.JWT_SECRECT
+            )
+
+            await sendEmail({
+                to:email,
+                subject:'Welcome to Perplexity!',
+                html:`
+                <p>Hi ${username}</p>
+
+                <a href='https://perplexity-project-vay7.onrender.com/api/auth/verify-email?token=${emailVerficationToken}'>
+                Verify Email
+                </a>
+                `
+            })
+
+        } catch(err) {
+            console.log("EMAIL ERROR:", err)
+        }
+
+    } catch(err) {
+
+        console.log(err)
+
+        return res.status(500).json({
+            success:false,
+            message:err.message
+        })
+    }
 }
 
 export async function loginController(req,res){
