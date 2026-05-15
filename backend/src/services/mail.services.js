@@ -1,11 +1,11 @@
 import dotenv from 'dotenv'
 dotenv.config()
 
+import dns from 'dns'
+dns.setDefaultResultOrder('ipv4first')
+
 import nodemailer from 'nodemailer'
 import { google } from 'googleapis'
-import dns from 'dns'
-
-dns.setDefaultResultOrder('ipv4first')
 
 const OAuth2 = google.auth.OAuth2
 
