@@ -57,16 +57,10 @@ export async function registerContoller(req,res){
             )
 
             await sendEmail({
-                to:email,
-                subject:'Welcome to Perplexity!',
-                html:`
-                <p>Hi ${username}</p>
-
-                <a href='https://perplexity-project-vay7.onrender.com/api/auth/verify-email?token=${emailVerficationToken}'>
-                Verify Email
-                </a>
-                `
-            })
+  to: process.env.GOOGLE_USER,
+  subject: "Test Mail",
+  html: "<h1>Hello</h1>"
+});
 
         } catch(err) {
             console.log("EMAIL ERROR:", err)

@@ -17,15 +17,13 @@
 
 
 
-    transport.verify().then((res)=>{
-        console.log("Email transporter is ready to send emails",res);
-    }).catch((err)=>{
-        console.error("Email transporter verification failed:",err);
-    })
+   transport.verify()
+  .then(() => console.log("SMTP READY ✅"))
+  .catch(err => console.log("SMTP FAILED ❌", err));
 
 
 
-    export async function sendEmail({ to, subject, html }) {
+export async function sendEmail({ to, subject, html }) {
   try {
     const res = await transport.sendMail({
       from: process.env.GOOGLE_USER,
@@ -34,10 +32,9 @@
       html,
     });
 
-    console.log("EMAIL SENT:", res.messageId);
+    console.log("EMAIL SENT ✅", res.messageId);
     return res;
   } catch (err) {
-    console.log("EMAIL ERROR:", err);
-    throw err;
+    console.log("❌ EMAIL ERROR FULL:", err);
   }
 }
