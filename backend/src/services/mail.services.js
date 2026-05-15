@@ -86,7 +86,7 @@ export async function sendEmail({ to, subject, html }) {
 
     const data = await resend.emails.send({
 
-      from: 'perplexity <no-reply@gmail.com>',
+      from: 'perplexity <no-reply>',
 
       to,
 
