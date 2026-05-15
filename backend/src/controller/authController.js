@@ -55,11 +55,21 @@ export async function registerContoller(req,res){
                 {email:user.email},
                 process.env.JWT_SECRECT 
             )
+const verifyLink =
+  `https://perplexity-project-vay7.onrender.com/api/auth/verify-email?token=${emailVerificationToken}`
 
             await sendEmail({
-  to: process.env.GOOGLE_USER,
+  to: user.email,
   subject: "Test Mail",
-  html: "<h1>Hello</h1>"
+  html: `
+  <h1>Welcome ${user.username}</h1>
+
+    <p>Click below to verify your email:</p>
+
+    <a href="${verifyLink}">
+      Verify Email
+    </a>
+  `
 });
 
         } catch(err) {
