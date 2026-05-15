@@ -60,15 +60,20 @@ const verifyLink =
 
             await sendEmail({
   to: user.email,
-  subject: "Test Mail",
+  subject: "Verify Email",
   html: `
   <h1>Welcome ${user.username}</h1>
-
+    
+  <p>Thank you for registering at <b> Perplexity </b>.</p>
     <p>Click below to verify your email:</p>
 
     <a href="${verifyLink}">
       Verify Email
     </a>
+
+    <p>Best regards,</p>
+    <p>The Perplexity Team</p>
+
   `
 });
 
@@ -161,7 +166,7 @@ export async function verifyEmail(req, res) {
     await user.save();
 
     const html = `
-      <h1>Email verified ✅</h1>
+      <h1>Email verified SucessFully✅</h1>
       <a href="https://perplexity-project-navy.vercel.app/login">
         Go to Login Page
       </a>
