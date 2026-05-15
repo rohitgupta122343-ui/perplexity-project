@@ -86,7 +86,7 @@ export async function sendEmail({ to, subject, html }) {
 
     const data = await resend.emails.send({
 
-      from: 'Rohit Gupta <onboarding@resend.dev>',
+      from: 'perplexity <no-reply@gmail.com>',
 
       to,
 
