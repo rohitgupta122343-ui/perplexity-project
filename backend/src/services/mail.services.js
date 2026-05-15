@@ -87,7 +87,7 @@ export async function sendEmail({ to, subject, html }) {
 
     const data = await resend.emails.send({
 
-      from: 'onboarding@resend.dev',
+      from: process.env.GOOGLE_USER,
 
       to,
 
