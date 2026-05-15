@@ -14,7 +14,7 @@ const mistralModel = new ChatMistralAI({
     model : "mistral-small-latest",
     apiKey : process.env.MISTRAL_API_KEY
 })
-
+console.log("MISTRAL:", process.env.MISTRAL_API_KEY)
 const searchInternetTool = tool(
     searchInternet,{
         name : "searchInternet",
