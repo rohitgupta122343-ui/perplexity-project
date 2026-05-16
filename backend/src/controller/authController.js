@@ -56,7 +56,7 @@ export async function registerContoller(req,res){
                 process.env.JWT_SECRECT 
             )
 const verifyLink =
-  `https://perplexity-project-vay7.onrender.com/api/auth/verify-email?token=${emailVerficationToken}`
+  `perplexity-project-production.up.railway.app/api/auth/verify-email?token=${emailVerficationToken}`
 
             await sendEmail({
   to: user.email,
