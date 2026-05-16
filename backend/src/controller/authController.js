@@ -183,24 +183,35 @@ export async function verifyEmail(req, res) {
   }
 }
 
-export async function getMe(req,res){
+export async function getMe(req, res) {
 
-    const id = req.user.id
+    try {
 
-    const user = await userModel.findById(id).select('-password')
-    
-    if(!user){
-        res.status(404).json({
-            message : 'user not Found'
+        const id = req.user.id
+
+        const user = await userModel
+            .findById(id)
+            .select('-password')
+
+        if (!user) {
+            return res.status(404).json({
+                message: 'user not found'
+            })
+        }
+
+        return res.status(200).json({
+            message: 'user found successfully',
+            user
+        })
+
+    } catch (err) {
+
+        console.log(err)
+
+        return res.status(500).json({
+            message: err.message
         })
     }
-
-    res.status(200).json({
-        message : 'user found sucessfully',
-        user
-    })
-    
-    
 }
 
 export async function logout(req, res) {
