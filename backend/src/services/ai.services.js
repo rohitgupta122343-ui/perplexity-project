@@ -63,8 +63,6 @@ Do NOT generate random phrases and used simple english.`
 
 export async function genrateRespones(messages, type) {
 
-
-
     const respones = await agent.invoke({
         messages: [
             new SystemMessage(`

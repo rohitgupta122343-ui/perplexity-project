@@ -11,6 +11,7 @@ const tvly = tavily({
 export const searchInternet = async ({query})=>{
     const result =  await tvly.search(query,{
         maxResults : 5,
+        
     })
 
     return JSON.stringify(result)
