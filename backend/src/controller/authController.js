@@ -59,7 +59,7 @@ const verifyLink =
   `https://perplexity-project-production.up.railway.app/api/auth/verify-email?token=${emailVerficationToken}`
 
             await sendEmail({
-  to: user.email,
+  to:user.email,
   subject: "Verify Email",
   html: `
   <h1>Welcome ${user.username}</h1>
