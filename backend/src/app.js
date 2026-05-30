@@ -13,8 +13,8 @@ app.use(express.json())
 app.use(cookieParser())
 app.use(morgan("dev"))
 app.use(cors({
-    origin: 'https://perplexity-project-navy.vercel.app',
-    credentials: true
+   origin: "*",
+credentials: false
 }))
 
 app.get("/", (req, res) => {
