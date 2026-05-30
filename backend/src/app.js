@@ -12,7 +12,14 @@ const app = express()
 app.use(express.json())  
 app.use(cookieParser())
 app.use(morgan("dev"))
-app.use(cors())
+app.use(cors({
+  origin: [
+    "https://perplexity-project-navy.vercel.app",
+    "capacitor://localhost",
+    "http://localhost"
+  ],
+  credentials: true
+}))
 
 app.get("/", (req, res) => {
   res.send("API is running 🚀");
