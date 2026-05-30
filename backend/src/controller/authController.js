@@ -136,6 +136,7 @@ export async function loginController(req,res){
   secure: true,
   sameSite: "None"
 })
+console.log("LOGIN SUCCESS");
 
     res.status(201).json({
         messsage : 'user login sucessfully',
