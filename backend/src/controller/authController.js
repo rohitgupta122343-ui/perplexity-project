@@ -104,7 +104,7 @@ export async function loginController(req,res){
     // })
 
      const user = await userModel.findOne({ email })
-
+    console.log("REGISTER RESPONSE:", user)
 
     if(!user){
         return res.status(404).json({
