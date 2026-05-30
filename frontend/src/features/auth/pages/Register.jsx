@@ -43,9 +43,7 @@ try {
 
 } catch (error) {
   console.log(error);
-  toast.error(
-    error?.response?.data?.message || "Registration failed"
-  );
+ toast.error(err.response?.data?.message)
 }
 
  
