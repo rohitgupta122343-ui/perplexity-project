@@ -12,23 +12,9 @@ const app = express()
 app.use(express.json())  
 app.use(cookieParser())
 app.use(morgan("dev"))
-
-const allowedOrigins = [
-  'https://perplexity-project-navy.vercel.app',
-  'capacitor://localhost',
-  'http://localhost',
-  'http://localhost:3000'
-]
-
 app.use(cors({
-  origin: function (origin, callback) {
-    if (!origin) return callback(null, true)
-    if (allowedOrigins.includes(origin)) {
-      return callback(null, true)
-    }
-    callback(new Error("Not allowed by CORS"))
-  },
-  credentials: true
+    origin: "*",
+credentials: false
 }))
 
 app.get("/", (req, res) => {
