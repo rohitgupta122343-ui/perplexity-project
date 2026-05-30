@@ -204,11 +204,11 @@ const Dashboard = () => {
                 {/* USER */}
                 <div className="flex flex-col overflow-hidden">
                   <span className="truncate text-sm font-medium text-white">
-                    {user.username}
+                    {user?.username}
                   </span>
 
                   <span className="truncate text-xs text-white/40">
-                    {user.email}
+                    {user?.email}
                   </span>
                 </div>
               </div>
