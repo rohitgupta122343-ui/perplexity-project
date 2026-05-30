@@ -1,9 +1,10 @@
 
 import axios from 'axios'
 
+axios.defaults.withCredentials = false;
 const api = axios.create({
     baseURL : 'https://perplexity-project-vay7.onrender.com',
-    withCredentials : true
+    withCredentials : false
 })
 
 export async function register({username,email,password}) {
