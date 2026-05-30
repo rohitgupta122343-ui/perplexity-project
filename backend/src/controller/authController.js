@@ -102,6 +102,8 @@ export async function loginController(req,res){
     //         {email}
     //     ]
     // })
+     console.log("LOGIN ROUTE HIT");
+    
 
      const user = await userModel.findOne({ email })
     console.log("REGISTER RESPONSE:", user)
