@@ -1,98 +1,203 @@
 import { ChatGoogleGenerativeAI } from "@langchain/google-genai";
-import {ChatMistralAI} from '@langchain/mistralai'
-import {HumanMessage,SystemMessage,AIMessage,tool,createAgent} from 'langchain'
-import * as z from 'zod'
+import {
+    HumanMessage,
+    SystemMessage,
+    AIMessage,
+    tool,
+    createAgent
+} from "langchain";
+
+import * as z from "zod";
+
 import { searchInternet } from "./internet.services.js";
 import { sendEmail } from "./mail.services.js";
 
+
+// ========================================
+// GEMINI MODEL
+// ========================================
+
 const geminiModel = new ChatGoogleGenerativeAI({
-  model: "gemini-flash-latest",
-  apiKey: process.env.GEMINI_API_KEY
+    model: "gemini-flash-latest",
+    apiKey: process.env.GEMINI_API_KEY
 });
 
-const mistralModel = new ChatMistralAI({
-    model : "mistral-small-latest",
-    apiKey : process.env.MISTRAL_API_KEY
-})
+
+// ========================================
+// SEARCH TOOL
+// ========================================
 
 const searchInternetTool = tool(
-    searchInternet,{
-        name : "searchInternet",
-        description : "Use to search latest Information on internet",
+    searchInternet,
+    {
+        name: "searchInternet",
+
+        description:
+            "Use this tool to search the latest information on the internet.",
+
         schema: z.object({
-   query: z.string().describe("search query look up internet")
-})
+            query: z.string().describe("Search query to look up on the internet")
+        })
     }
-)
+);
+
+
+// ========================================
+// EMAIL TOOL
+// ========================================
 
 const sendEmailTool = tool(
-    sendEmail,{
-        name : 'sendMail',
-        description : 'sending a email on a internert',
-      schema: z.object({
-        
-            to: z.string().email().describe("Receiver email address"),
+    sendEmail,
+    {
+        name: "sendMail",
 
-            subject: z.string().describe("Email subject"),
+        description:
+            "Use this tool to send an email.",
 
-            html: z.string().describe("Email body content"),
-})
-    },
-)
+        schema: z.object({
+
+            to: z.string()
+                .email()
+                .describe("Receiver email address"),
+
+            subject: z.string()
+                .describe("Email subject"),
+
+            html: z.string()
+                .describe("Email body content")
+        })
+    }
+);
+
+
+// ========================================
+// GEMINI AGENT
+// ========================================
 
 const agent = createAgent({
-    model:mistralModel,
-    tools:[searchInternetTool,sendEmailTool],
-    SystemMessage : `You are a professional email writing assistant.
 
-When generating email body:
-- Always write in a polite, professional tone
-- Always include:
-  1. Greeting (Hi / Dear)
-  2. Short introduction
-  3. Main message clearly
-  4. Optional help line
-  5. Closing (Best regards)
-  6. Signature line like [Your Name]
+    model: geminiModel,
 
-Format must look like a real human-written email.
+    tools: [
+        searchInternetTool,
+        sendEmailTool
+    ],
 
-Do NOT use slang or casual broken sentences.
-Do NOT generate random phrases and used simple english.`
-})
+    SystemMessage: `
+You are a helpful AI assistant.
 
-export async function genrateRespones(messages, type) {
+When generating an email:
 
-    const respones = await agent.invoke({
+- Always write in a polite and professional tone.
+- Include a greeting.
+- Include a short introduction.
+- Clearly explain the main message.
+- Include a helpful closing line when appropriate.
+- End with "Best regards".
+- Include a signature such as "[Your Name]".
+
+Write natural, simple English.
+
+Do not use slang.
+Do not use broken sentences.
+Do not generate random phrases.
+
+Use the searchInternet tool when the user asks for current or latest information.
+`
+});
+
+
+// ========================================
+// GENERATE AI RESPONSE
+// ========================================
+
+export async function genrateRespones(messages) {
+
+    const response = await agent.invoke({
         messages: [
             new SystemMessage(`
-                You are a helpful assistant.
-                Use searchInternet tool for latest info if needed.
-            `),
+You are a helpful AI assistant.
 
-            ...messages.map((msg) => {
-                if (msg.role === "user") return new HumanMessage(msg.content);
-                if (msg.role === "ai") return new AIMessage(msg.content);
-                return null;
-            }).filter(Boolean)
+Use the searchInternet tool when the user needs
+latest or current information.
+
+Always return a clear text response.
+`),
+
+            ...messages
+                .map((msg) => {
+                    if (msg.role === "user") {
+                        return new HumanMessage(msg.content);
+                    }
+
+                    if (msg.role === "ai") {
+                        return new AIMessage(msg.content);
+                    }
+
+                    return null;
+                })
+                .filter(Boolean)
         ]
     });
 
-    const last = respones.messages.at(-1);
+    const lastMessage = response.messages.at(-1);
+    const content = lastMessage?.content;
 
-    return last?.content || last?.text;
+    if (Array.isArray(content)) {
+        return content
+            .map((part) => {
+                if (typeof part === "string") return part;
+                if (part?.text) return part.text;
+                return "";
+            })
+            .join("")
+            .trim();
+    }
+
+    if (typeof content === "string") {
+        return content;
+    }
+
+    if (lastMessage?.text) {
+        return String(lastMessage.text);
+    }
+
+    return "Sorry, I could not generate a response.";
 }
 
-export async function genrateTitle(message){
 
-    const respones = await mistralModel.invoke([
-            new SystemMessage(`You are a helpful assistant that generates concise and descriptive titles for chat conversations.
-            
-            User will provide you with the first message of a chat conversation, and you will generate a title that captures the
-             essence of the conversation in 2-4 words. The title should be clear, relevant, and engaging, giving users a quick understanding 
-             of the chat's topic.`),
-            new HumanMessage(`Generate a title for a chat conversation based on the following first message ${message}`)
-    ])
+// ========================================
+// GENERATE CHAT TITLE
+// ========================================
 
-    return respones.text
+export async function genrateTitle(message) {
+
+    const response = await geminiModel.invoke([
+
+        new SystemMessage(`
+You generate concise and descriptive titles
+for chat conversations.
+
+Generate a title of only 2-4 words.
+
+The title should:
+- Clearly describe the user's topic.
+- Be short.
+- Be relevant.
+- Be natural.
+
+Return ONLY the title.
+Do not add quotes.
+Do not add explanations.
+`),
+
+        new HumanMessage(
+            `Create a title for this message:
+
+${message}`
+        )
+    ]);
+
+
+    return response.text?.trim() || "New Chat";
 }
