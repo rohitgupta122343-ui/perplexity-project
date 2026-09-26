@@ -7,7 +7,10 @@ export function initSocket(httpServer){
 
     io = new Server(httpServer,{
         cors:{
-            origin : 'https://perplexity-project-navy.vercel.app',
+            origin : [
+                'http://localhost:5173',
+                'https://nexora-ai-chat.vercel.app'
+            ],
             credentials : true
         }
     })

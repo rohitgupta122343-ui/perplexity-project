@@ -13,7 +13,10 @@ app.use(express.json())
 app.use(cookieParser())
 app.use(morgan("dev"))
 app.use(cors({
-  origin: true,
+  origin: [
+    "http://localhost:5173",
+    "https://nexora-ai-chat.vercel.app"
+  ],
   credentials: true
 }));
 
