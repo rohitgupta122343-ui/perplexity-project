@@ -1,40 +1,50 @@
 
-import axios from 'axios'
+import axios from "axios";
 
 const api = axios.create({
-    baseURL : 'https://perplexity-project-vay7.onrender.com',
-    withCredentials : true
-})
+  baseURL: "https://perplexity-project-vay7.onrender.com",
+  withCredentials: true,
+});
 
-export async function sendMessage({message, chatId}) {
-  const res = await api.post('/api/chats/message', {
+// Send a message
+export async function sendMessage({ message, chatId }) {
+  const response = await api.post("/api/chats/message", {
     message,
-    chatId
-  })
-  return res.data
+    chatId,
+  });
+
+  return response.data;
 }
 
-export async function getChats(){
-
-    const res = await api.get('/api/chats')
-    return res.data
+// Get all chats
+export async function getChats() {
+  const response = await api.get("/api/chats");
+  return response.data;
 }
 
-export async function getMessage(chatId){
+// Get messages for a particular chat
+export async function getMessage(chatId) {
+  const response = await api.get(
+    `/api/chats/${chatId}/messages`
+  );
 
-    const res = await api.get(`/api/chats/${chatId}/messages`)
-    return res.data
+  return response.data;
 }
 
-export async function deleteChat({chatId}){
+// Delete a chat
+export async function deleteChat({ chatId }) {
+  const response = await api.delete(
+    `/api/chats/delete/${chatId}`
+  );
 
-    const res = await api.delete(`/api/chats/delete/${chatId}`)
-    return res.data
+  return response.data;
 }
 
-export async function createChat({title}){
+// Create a new chat
+export async function createChat({ title }) {
+  const response = await api.post("/api/chats/create", {
+    title,
+  });
 
-    const res = await api.post('/api/chats/create',{title})
-    console.log(res.data);
-    return res.data
+  return response.data;
 }
